@@ -4,14 +4,19 @@ import FooterComponent from './components/FooterComponent'
 
 import HeaderComponent from './components/HeaderComponent'
 import ListEmployee from './components/ListEmployee'
-
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
 function App() {
 
   return (
     <>
+    <BrowserRouter>
     <HeaderComponent/>
-     <ListEmployee/>
+    <Routes>
+      <Route path='/' element={<ListEmployee/>}></Route>
+      <Route path='/employees' element={<ListEmployee/>}></Route>
+     </Routes>
     <FooterComponent/>
+    </BrowserRouter>
     </>
   )
 }
