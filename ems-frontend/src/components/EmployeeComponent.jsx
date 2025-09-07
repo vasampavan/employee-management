@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { createEmployee } from '../services/EmployeeService'
+import React, { useEffect, useState } from 'react'
+import { createEmployee, getEmployee } from '../services/EmployeeService'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 const EmployeeComponent = () => {
@@ -11,6 +11,17 @@ const EmployeeComponent = () => {
     firstName:'',
     lastName:'',
     email:''
+   })
+   useEffect(()=>{
+    if(id){
+        getEmployee(id).then((response)=>{
+            setFirstName(response.data.firstName);
+            setLastName(response.data.lastName);
+            setEmail(response.data.email);
+        }).catch(error=>{
+            console.error(error);
+        })
+}
    })
    const navigator=useNavigate();
    function handleFirstName(e){
@@ -67,9 +78,9 @@ const EmployeeComponent = () => {
 
    function pageTitle(){
      if(id){
-        return    <h2 className='text-center'>Update employee</h2>
+        return <h2 className='text-center'>Update employee</h2>
      }else{
-        return    <h2 className='text-center'>Add employee</h2>
+        return <h2 className='text-center'>Add employee</h2>
      }
    }
   return (
