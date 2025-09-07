@@ -1,10 +1,16 @@
 import React, { useState } from 'react'
 import { createEmployee } from '../services/EmployeeService'
 import { useNavigate } from 'react-router-dom'
+
 const EmployeeComponent = () => {
    const [firstName,setFirstName]=useState('')
    const [lastName,setLastName]=useState('')
    const [email,setEmail]=useState('')
+   const [errors,setErrors]=useState({
+    firstName:'',
+    lastName:'',
+    email:''
+   })
    const navigator=useNavigate();
    function handleFirstName(e){
     setFirstName(e.target.value);
@@ -20,12 +26,42 @@ const EmployeeComponent = () => {
    }
    function saveEmployee(e){
     e.preventDefault();
-    const employee={firstName,lastName,email}
+    if(validateform()){
+        const employee={firstName,lastName,email}
     console.log(employee)
     createEmployee(employee).then((response)=>{
         console.log(response.data);
         navigator('/employees')
     })
+    }
+    
+   }
+   function validateform(){
+    let valid=true;
+    const errorsCopy={... errors}
+    if(firstName.trim()){
+        errorsCopy.firstName='';
+    }
+    else{
+        errorsCopy.firstName='First Name is required';
+        valid=false;
+    }
+    if(lastName.trim()){
+        errorsCopy.lastName='';
+    }
+    else{
+        errorsCopy.lastName='Last Name is required';
+        valid=false;
+    }
+    if(email.trim()){
+        errorsCopy.email='';
+    }
+    else{
+        errorsCopy.email='Email is required';
+        valid=false;
+    }
+    setErrors(errorsCopy);
+    return valid;
    }
   return (
     <div className='container'>
@@ -37,18 +73,18 @@ const EmployeeComponent = () => {
                     <form action="">
                         <div className='form-group mb-2'>
                             <label className='form-label'>First Name</label>
-                            <input type="text" placeholder='Enter Employee First Name' name='FirstName' value={firstName} className='form-control' onChange={handleFirstName}/>
-
+                            <input type="text" placeholder='Enter Employee First Name' name='FirstName' value={firstName} className={`form-control ${ errors.firstName? 'is-invalid':''}`} onChange={handleFirstName}/>
+                            {errors.firstName && <div className='invalid-feedback'>{errors.firstName}</div>}
                         </div>
                          <div className='form-group mb-2'>
                             <label className='form-label'>Last Name</label>
-                            <input type="text" placeholder='Enter Employee Last Name' name='LastName' value={lastName} className='form-control' onChange={handleLastName}/>
-
+                            <input type="text" placeholder='Enter Employee Last Name' name='LastName' value={lastName} className={`form-control ${ errors.lastName? 'is-invalid':''}`} onChange={handleLastName}/>
+                            {errors.lastName && <div className='invalid-feedback'>{errors.lastName}</div>}
                         </div>
                         <div className='form-group mb-2'>
                             <label className='form-label'>Email</label>
-                            <input type="text" placeholder='Enter Employee Email' name='Email' value={email} className='form-control' onChange={handleEmail}/>
-
+                            <input type="text" placeholder='Enter Employee Email' name='Email' value={email} className={`form-control ${ errors.email? 'is-invalid':''}`} onChange={handleEmail}/>
+                            {errors.email && <div className='invalid-feedback'>{errors.email}</div>}
                         </div>
                         <button className='btn btn-success' onClick={saveEmployee}>Submit</button>
                     </form>
