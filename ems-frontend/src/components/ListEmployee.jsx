@@ -12,7 +12,7 @@ export default function ListEmployee() {
         })
     },[])
     function addNewEmployee(){
-        navigator('/add-employees')
+        navigator('/add-employee')
     }
     return (
         <div className='container'>
